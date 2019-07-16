@@ -32,7 +32,7 @@ def use_log_data():
             pass
         else:
             # Remember this id so that it doesn't get to parse again
-            # next loop
+            # next loop.
             previous_ids.append(l[0])
 
             for employee in employees:
@@ -40,11 +40,6 @@ def use_log_data():
                     if employee['section_id'] not in sections:
                         sections.append(employee['section_id'])
 
-    '''
-    sections = []
-    for employee_id in employee_ids:
-        section = db(db.employees.employee_id == int(employee_id)).select()[0]['section_id']
-        if section not in sections:
-            sections.append(section)'''
-
     return dict(sections=sections)
+
+def

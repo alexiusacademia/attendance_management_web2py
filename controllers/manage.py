@@ -40,11 +40,4 @@ def use_log_data():
                     if employee['section_id'] not in sections:
                         sections.append(employee['section_id'])
 
-    '''
-    sections = []
-    for employee_id in employee_ids:
-        section = db(db.employees.employee_id == int(employee_id)).select()[0]['section_id']
-        if section not in sections:
-            sections.append(section)'''
-
     return dict(sections=sections)

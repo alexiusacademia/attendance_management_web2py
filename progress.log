@@ -494,3 +494,5 @@
 [2019-07-16 19:52:20] EDIT AttendanceManagement/views/manage/use_log_data.html: 0
 [2019-07-16 19:52:49] EDIT AttendanceManagement/views/manage/use_log_data.html: 2
 [2019-07-16 19:53:21] EDIT AttendanceManagement/views/manage/use_log_data.html: 2
+[2019-07-16 19:57:18] EDIT AttendanceManagement/controllers/manage.py: -5
+[2019-07-16 19:57:23] EDIT AttendanceManagement/controllers/manage.py: -1
