@@ -31,7 +31,10 @@ def use_log_data():
         if l[0] in previous_ids:
             pass
         else:
+            # Remember this id so that it doesn't get to parse again
+            # next loop.
             previous_ids.append(l[0])
+
             for employee in employees:
                 if employee['employee_id'] == int(l[0]):
                     if employee['section_id'] not in sections:
