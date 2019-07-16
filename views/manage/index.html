@@ -1,0 +1,12 @@
+{{extend 'layout.html'}}
+<h1>Manage System</h1>
+
+{{ links = [{'name':'Attendance Data Logs', 'url':URL('manage', 'attlogs')},
+            {'name':'Generate Entry', 'url':URL('manage', 'generate_entry')}] }}
+
+<div class="list-group">
+    {{ for link in links: }}
+    <a href="{{=link['url']}}" class="list-group-item list-group-item-action">{{=link['name']}}</a>{{pass}}
+</div>
+
+<!-- {{=BEAUTIFY(response._vars)}} -->

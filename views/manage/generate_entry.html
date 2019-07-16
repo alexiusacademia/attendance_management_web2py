@@ -1,0 +1,9 @@
+{{extend 'layout.html'}}
+<h1>Select Data To Use</h1>
+
+<div class='list-group'>
+    {{for log in logs:}}
+        <a href="{{=URL('manage/use_log_data', str(log['id']))}}" class="list-group-item">
+            {{=log['uploaded']}} <br/> Remarks: {{=log['remarks']}}{{pass}}
+        </a>
+</div>

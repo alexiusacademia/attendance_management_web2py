@@ -1,0 +1,198 @@
+import datetime
+
+from common.constants import *
+
+
+def get_all_time_entries(start_date: datetime.datetime,
+                         end_date: datetime.datetime,
+                         time_lines,
+                         employee_id: int):
+    """
+    Get all the time logs of an employee from a given date range.
+    :param start_date: Inclusive on the range
+    :param end_date: Inclusive on the range
+    :param time_lines: The lines of the .dat file that was read by file.readlines()
+    :param employee_id: Employee id in integer.
+    :return:
+    """
+    time_entries: [datetime] = []
+
+    start_date = start_date.date()
+    end_date = end_date.date()
+
+    for line in time_lines:
+        elems = line.split()
+        id = int(elems[0])
+        if id == employee_id:
+            _date = elems[1]
+            time = elems[2]
+            _dt = _date + ' ' + time
+
+            _entry = datetime.datetime.strptime(_dt, '%Y-%m-%d %H:%M:%S')
+
+            if start_date <= datetime.datetime.strptime(_date, '%Y-%m-%d').date() <= end_date:
+                time_entries.append(_entry)
+
+    return time_entries
+
+
+def get_all_entries(start_date: datetime, end_date: datetime, time_lines, employee_id: int):
+    """
+    Get all the logs of an employee from a given date range.
+    :param start_date: Inclusive on the range
+    :param end_date: Inclusive on the range
+    :param time_lines: The lines of the .dat file that was read by file.readlines()
+    :param employee_id: Employee id in integer.
+    :return: List of log data
+    """
+    entries = []
+
+    start_date = start_date.date()
+    end_date = end_date.date()
+
+    for line in time_lines:
+        elems = line.split()
+        id = int(elems[0])
+        if id == employee_id:
+            _date = elems[1]
+
+            entry = datetime.datetime.strptime(_date, '%Y-%m-%d')
+            entry = entry.date()
+
+            if start_date <= entry <= end_date:
+                entries.append(line)
+
+    return entries
+
+
+def get_time_entries_for_a_day(day: datetime.date, entries: iter([datetime])):
+    """
+    Get time entries of an employee for a day.
+    :param day: The date where the entries are in concern.
+    :param entries: List of datetime entries.
+    :return: List of all the logs of an employee for the day
+    """
+    entries_for_the_day = []
+
+    for entry in entries:
+        entry_date = entry.date()
+
+        if entry_date == day:
+            entries_for_the_day.append(entry)
+
+    return entries_for_the_day
+
+
+def get_log_entries_for_a_day(day: datetime.date, entries: iter([str])):
+    """
+    Get the entries of an employee for a day.
+    :param day: The date where the entries are in concern.
+    :param entries: List of datetime entries.
+    :return: List of all the logs of an employee for the day
+    """
+    log_for_the_day = []
+
+    for entry in entries:
+        elems = entry.split()
+        _date = elems[1]
+        _date = datetime.datetime.strptime(_date, '%Y-%m-%d')
+        _date = _date.date()
+
+        if _date == day:
+            code = elems[3] + elems[4] + elems[5] + elems[6]
+            log_for_the_day.append(code)
+
+    return log_for_the_day
+
+
+def get_time_in(day_time_entries, day_log_entries, am=True):
+    """
+    Returns the time-in object that includes time-in and late in minutes.
+    :param day_time_entries: List of Date and Time entries
+    :param day_log_entries: List of Log Types (e.g. 1010) for the day
+    :param am: Indicate that the time-in is for A.M.
+    :return:
+    """
+    obj = {}
+
+    _log1 = ''
+    _t1 = None
+    _time_threshold = None
+
+    if am:
+        if len(day_log_entries) == 0:
+            return {'time_in': None, 'message': 'Not enough log.'}
+
+        _log1 = day_log_entries[0]
+        _t1 = day_time_entries[0].time()
+        _time_threshold = AM_TIME_IN_THRESHOLD
+
+    if not am:
+        if len(day_log_entries) < 3:
+            return {'time_in': None, 'message': 'Not enough log.'}
+
+        _log1 = day_log_entries[2]
+        _t1 = day_time_entries[2].time()
+        _time_threshold = PM_TIME_IN_THRESHOLD
+
+    if _log1 != CODE_LOG_IN:
+        return {'time_in': None, 'message': 'Wrong log code.'}
+
+    _noon_time = datetime.time(12, 0, 0)
+
+    obj['time_in'] = _t1
+
+    late_minutes = 0
+
+    # Check for late time-in
+    if _t1 > _time_threshold:
+        late_minutes = datetime.datetime.combine(datetime.date.min, _t1) - \
+                       datetime.datetime.combine(datetime.date.min, _time_threshold)
+        late_minutes = int(late_minutes.total_seconds() / 60)
+
+    obj['late'] = late_minutes
+
+    return obj
+
+
+def get_time_out(day_time_entries, day_log_entries, am=True):
+    obj = {}
+
+    _log1 = ''
+    _t1 = None
+    _time_threshold = None
+
+    if am:
+        if len(day_log_entries) < 2:
+            return {'time_out': None, 'message': 'Not enough log.'}
+
+        _log1 = day_log_entries[1]
+        _t1 = day_time_entries[1].time()
+        _time_threshold = AM_TIME_OUT_THRESHOLD
+
+    if not am:
+        if len(day_log_entries) < 4:
+            return {'time_out': None, 'message': 'Not enough log.'}
+
+        _log1 = day_log_entries[3]
+        _t1 = day_time_entries[3].time()
+        _time_threshold = PM_TIME_OUT_THRESHOLD
+
+    if _log1 != CODE_LOG_OUT:
+        return {'time_out': None, 'message': 'Wrong log code.'}
+
+    _noon_time = datetime.time(12, 0, 0)
+
+    obj['time_out'] = _t1
+
+    undertime_minutes = 0
+
+    # Check for late time-in
+    if _t1 < _time_threshold:
+        undertime_minutes = datetime.datetime.combine(datetime.date.min, _time_threshold) - \
+                       datetime.datetime.combine(datetime.date.min, _t1)
+        undertime_minutes = int(undertime_minutes.total_seconds() / 60)
+
+    obj['under_time'] = undertime_minutes
+
+    return obj
