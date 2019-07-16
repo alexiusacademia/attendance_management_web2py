@@ -3,7 +3,12 @@
 <h1>
     Choose Section to Manage Data
 </h1>
+
 <hr/>
-{{for section in sections:}}
-    {{section_name = db(db.sections.id == int(section)).select()[0]}}
-    {{=section_name['name']}} <br/> {{pass}}
+<div class='list-group'>
+    {{for section in sections:}}
+        {{section_name = db(db.sections.id == int(section)).select()[0]}}
+        <a href="" class="list-group-item">
+            {{=section_name['name']}} <br/> {{pass}}
+        </a>
+</div>
