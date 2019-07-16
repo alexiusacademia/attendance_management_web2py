@@ -44,9 +44,9 @@ def use_log_data():
 
 def view_section_log_data():
     section_id = request.args[0]
-    
+
     section = db(db.sections.id == section_id).select()
-    
+
     employees_in_section = db(db.employees.section_id == section_id).select()
-    
+
     return dict(section=section, employees=employees_in_section)

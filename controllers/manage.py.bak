@@ -49,4 +49,4 @@ def view_section_log_data():
     
     employees_in_section = db(db.employees.section_id == section_id).select()
     
-    return dict(section=section, employees=employees)
+    return dict(section=section, employees=employees_in_section)
