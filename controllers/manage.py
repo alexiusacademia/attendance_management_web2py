@@ -6,19 +6,22 @@ import datetime
 def index():
     return dict(message="hello from manage.py")
 
+
 def attlogs():
     db.logs.uploaded.default = request.now
     logs = SQLFORM.grid(db.logs)
     # form = SQLFORM(db.logs).process()
     return locals()
 
+
 def generate_entry():
     logs = db(db.logs).select(orderby=~db.logs.id)
     return dict(logs=logs)
 
+
 def use_log_data():
-    id = request.args[0]
-    log = db(db.logs.id == id).select()
+    log_id = request.args[0]
+    log = db(db.logs.id == log_id).select()
     filepath = os.path.join(request.folder, 'uploads', log[0].log_file)
     f = open(filepath, 'r')
     lines = f.readlines()
@@ -60,25 +63,42 @@ def use_log_data():
                     if employee['section_id'] not in sections:
                         sections.append(employee['section_id'])
 
-    session.num_lines = str(len(lines))
     return dict(sections=sections, start_date=start_date, end_date=end_date)
+
+
+def set_session_start_date():
+    # Set the start_date and save to session
+    start_date = request.args[0]
+
+    session.start_date = start_date
+
+    return start_date
+
+
+def set_session_end_date():
+    # Set the end_date and save to session
+    end_date = request.args[0]
+
+    session.start_date = end_date
+
+    return end_date
+
 
 def view_section_log_data():
     section_id = request.args[0]
-
+    response.flash = T(str(session.start_date))
     section = db(db.sections.id == section_id).select()
 
     employees_in_section = db(db.employees.section_id == section_id).select()
 
     return dict(section=section, employees=employees_in_section)
 
+
 def view_employee_log_data():
     employee_id = request.args[0]
     employee = db(db.employees.employee_id == int(employee_id)).select()
 
     lines = session.log_lines
-
-    form = FORM(INPUT(_name='start_date', _type='date'))
 
     start_date = datetime.datetime(2019, 2, 1)
     end_date = datetime.datetime(2019, 2, 15)
@@ -90,4 +110,4 @@ def view_employee_log_data():
             _employee_log.append(line)
 
     # _logs = get_all_entries(start_date, end_date, lines, employee_id)
-    return dict(log=_employee_log, name=employee[0]['name'], form=form)
+    return dict(log=_employee_log, name=employee[0]['name'])
