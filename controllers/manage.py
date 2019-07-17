@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import datetime
+from common.logs.entries import *
 
 
 def index():
@@ -86,7 +87,6 @@ def set_session_end_date():
 
 def view_section_log_data():
     section_id = request.args[0]
-    response.flash = T(str(session.start_date))
     section = db(db.sections.id == section_id).select()
 
     employees_in_section = db(db.employees.section_id == section_id).select()
@@ -98,16 +98,9 @@ def view_employee_log_data():
     employee_id = request.args[0]
     employee = db(db.employees.employee_id == int(employee_id)).select()
 
-    lines = session.log_lines
+    start_date = datetime.datetime.strptime(str(session.start_date), '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(str(session.end_date), '%Y-%m-%d')
 
-    start_date = datetime.datetime(2019, 2, 1)
-    end_date = datetime.datetime(2019, 2, 15)
+    _employee_log = get_all_time_entries(start_date, end_date, session.log_lines, int(employee_id))
 
-    _employee_log = []
-    for line in lines:
-        elems = line.split()
-        if int(elems[0]) == int(employee_id):
-            _employee_log.append(line)
-
-    # _logs = get_all_entries(start_date, end_date, lines, employee_id)
-    return dict(log=_employee_log, name=employee[0]['name'])
+    return dict(log=_employee_log, name=employee[0]['name'], sd=end_date)

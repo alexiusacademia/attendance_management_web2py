@@ -31,7 +31,7 @@ def get_all_time_entries(start_date: datetime.datetime,
             if start_date <= datetime.datetime.strptime(_date, '%Y-%m-%d').date() <= end_date:
                 time_entries.append(_entry)
 
-    return time_entries
+    return time_lines
 
 
 def get_all_entries(start_date: datetime, end_date: datetime, time_lines, employee_id: int):

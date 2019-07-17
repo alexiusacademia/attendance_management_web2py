@@ -8,11 +8,11 @@
     <div class="row">
         <div class="col col-3">
             <label for="start_date">Start Date</label>
-            <input type="date" class="form-control" id="start_date" value="{{=str(start_date)}}" />
+            <input type="date" class="form-control" id="start_date" value="{{=str(session.start_date)}}" />
         </div>
         <div class="col col-3">
             <label for="end_date">End Date</label>
-            <input type="date" class="form-control" id="end_date" value="{{=str(end_date)}}" />
+            <input type="date" class="form-control" id="end_date" value="{{=str(session.end_date)}}" />
         </div>
     </div>
 </form>
@@ -32,7 +32,7 @@ $('#start_date').on('change', () => {
 
     origin = window.location.origin
 
-    $.get(origin + '/AttendanceManagementSystem/manage/set_session_start_date/' + x.toString())
+    $.get(origin + '/attendancemanagementsystem/manage/set_session_start_date/' + x.toString())
             .done((d) => {
                 console.log(d)
             })
@@ -43,7 +43,7 @@ $('#end_date').on('change', () => {
 
     origin = window.location.origin
 
-    $.get(origin + '/AttendanceManagementSystem/manage/set_session_end_date/' + x.toString())
+    $.get(origin + '/attendancemanagementsystem/manage/set_session_end_date/' + x.toString())
             .done((d) => {
                 console.log(d)
             })
