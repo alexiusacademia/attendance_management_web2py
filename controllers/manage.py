@@ -80,7 +80,7 @@ def set_session_end_date():
     # Set the end_date and save to session
     end_date = request.args[0]
 
-    session.start_date = end_date
+    session.end_date = end_date
 
     return end_date
 
@@ -101,6 +101,11 @@ def view_employee_log_data():
     start_date = datetime.datetime.strptime(str(session.start_date), '%Y-%m-%d')
     end_date = datetime.datetime.strptime(str(session.end_date), '%Y-%m-%d')
 
-    _employee_log = get_all_time_entries(start_date, end_date, session.log_lines, int(employee_id))
+    # _employee_log = get_all_time_entries(start_date, end_date, session.log_lines, int(employee_id))
+    _time_logs = get_all_time_entries(start_date, end_date, session.log_lines, int(employee_id))
+    _logs = get_all_entries(start_date, end_date, session.log_lines, int(employee_id))
 
-    return dict(log=_employee_log, name=employee[0]['name'], sd=end_date)
+    # Get list of date from the range
+    _dates = get_dates(start_date, end_date)
+
+    return dict(_dates=_dates, time_logs=_time_logs, logs=_logs, name=employee[0]['name'])
