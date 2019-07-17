@@ -1,12 +1,26 @@
 {{extend 'layout.html'}}
+{{from datetime import timedelta, date}}
 <h2>
     {{=name}}
 </h2>
 
-{{=session.start_date}}
-{{=session.end_date}}
 <hr/>
-{{=log}}
-<div class="list-group">
 
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>AM In</th>
+            <th>AM Out</th>
+            <th>PM In</th>
+            <th>OM Out</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{for _date in _dates:}}
+            <tr>
+                <td>{{=_date}}</td>
+                {{pass}}
+            </tr>
+    </tbody>
+</table>
