@@ -1,8 +1,8 @@
 import datetime
 
 
-def get_all_time_entries(start_date: datetime.datetime,
-                         end_date: datetime.datetime,
+def get_all_time_entries(start_date: datetime,
+                         end_date: datetime,
                          time_lines,
                          employee_id: int):
     """
@@ -31,7 +31,7 @@ def get_all_time_entries(start_date: datetime.datetime,
             if start_date <= datetime.datetime.strptime(_date, '%Y-%m-%d').date() <= end_date:
                 time_entries.append(_entry)
 
-    return time_lines
+    return time_entries
 
 
 def get_all_entries(start_date: datetime, end_date: datetime, time_lines, employee_id: int):
@@ -194,3 +194,19 @@ def get_time_out(day_time_entries, day_log_entries, am=True):
     obj['under_time'] = undertime_minutes
 
     return obj
+
+def get_dates(lines):
+    """
+    Get all dates in the log.
+    :param lines:
+    :return:
+    """
+    _dates = []
+    for line in lines:
+        elems = line.split()
+        _date = elems[1]
+
+        _entry = datetime.datetime.strptime(_date, '%Y-%m-%d')
+        if _entry not in _dates:
+            _dates.append(_entry)
+    return _dates
