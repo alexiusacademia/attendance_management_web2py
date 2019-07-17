@@ -38,6 +38,9 @@ def use_log_data():
         if _date > end_date:
             end_date = _date
 
+    session.start_date = start_date
+    session.end_date = end_date
+
     session.log_lines = lines
     employees = db(db.employees).select()
 
