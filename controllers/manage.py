@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from entries import *
+from common.logs.entries import *
 
 
 def index():
