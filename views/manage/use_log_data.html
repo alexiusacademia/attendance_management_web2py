@@ -25,3 +25,27 @@
             {{=section_name['name']}} <br/> {{pass}}
         </a>
 </div>
+
+<script>
+$('#start_date').on('change', () => {
+    x = $('#start_date').val()
+
+    origin = window.location.origin
+
+    $.get(origin + '/AttendanceManagementSystem/manage/set_session_start_date/' + x.toString())
+            .done((d) => {
+                console.log(d)
+            })
+})
+
+$('#end_date').on('change', () => {
+    x = $('#start_date').val()
+
+    origin = window.location.origin
+
+    $.get(origin + '/AttendanceManagementSystem/manage/set_session_end_date/' + x.toString())
+            .done((d) => {
+                console.log(d)
+            })
+})
+</script>
