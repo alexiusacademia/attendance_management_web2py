@@ -4,6 +4,19 @@
     Choose Section to Manage Data
 </h1>
 
+<form>
+    <div class="row">
+        <div class="col col-3">
+            <label for="start_date">Start Date</label>
+            <input type="date" class="form-control" id="start_date" value="{{=str(start_date)}}" />
+        </div>
+        <div class="col col-3">
+            <label for="end_date">End Date</label>
+            <input type="date" class="form-control" id="end_date" value="{{=str(end_date)}}" />
+        </div>
+    </div>
+</form>
+
 <hr/>
 <div class='list-group'>
     {{for section in sections:}}
