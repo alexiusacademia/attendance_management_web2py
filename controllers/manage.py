@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from common.logs.entries import *
+import datetime
 
 
 def index():
@@ -23,6 +23,22 @@ def use_log_data():
     f = open(filepath, 'r')
     lines = f.readlines()
 
+    # Get the oldest and latest dates
+    # to be displayed as default in the start and end date inputs
+    start_date = datetime.date.today()
+    end_date = datetime.date(2013, 9, 16)
+
+    for line in lines:
+        elems = line.split()
+        _date = elems[1]
+        _date = datetime.datetime.strptime(_date, "%Y-%m-%d").date()
+
+        if _date < start_date:
+            start_date = _date
+        if _date > end_date:
+            end_date = _date
+
+    session.log_lines = lines
     employees = db(db.employees).select()
 
     sections = []
@@ -40,8 +56,9 @@ def use_log_data():
                 if employee['employee_id'] == int(l[0]):
                     if employee['section_id'] not in sections:
                         sections.append(employee['section_id'])
+
     session.num_lines = str(len(lines))
-    return dict(sections=sections)
+    return dict(sections=sections, start_date=start_date, end_date=end_date)
 
 def view_section_log_data():
     section_id = request.args[0]
@@ -54,5 +71,20 @@ def view_section_log_data():
 
 def view_employee_log_data():
     employee_id = request.args[0]
-    employee = db(db.employees.id == employee_id).select()
-    return locals()
+    employee = db(db.employees.employee_id == int(employee_id)).select()
+
+    lines = session.log_lines
+
+    form = FORM(INPUT(_name='start_date', _type='date'))
+
+    start_date = datetime.datetime(2019, 2, 1)
+    end_date = datetime.datetime(2019, 2, 15)
+
+    _employee_log = []
+    for line in lines:
+        elems = line.split()
+        if int(elems[0]) == int(employee_id):
+            _employee_log.append(line)
+
+    # _logs = get_all_entries(start_date, end_date, lines, employee_id)
+    return dict(log=_employee_log, name=employee[0]['name'], form=form)
