@@ -195,18 +195,24 @@ def get_time_out(day_time_entries, day_log_entries, am=True):
 
     return obj
 
-def get_dates(lines):
+
+def get_dates(start_date: datetime, end_date: datetime):
     """
-    Get all dates in the log.
+    Get all dates in a range
     :param lines:
+    :param start_date:
+    :param end_date
     :return:
     """
     _dates = []
-    for line in lines:
-        elems = line.split()
-        _date = elems[1]
 
-        _entry = datetime.datetime.strptime(_date, '%Y-%m-%d')
-        if _entry not in _dates:
-            _dates.append(_entry)
+    start_date = start_date.date()
+    end_date = end_date.date()
+
+    _curr_date: datetime = start_date
+
+    while _curr_date <= end_date:
+        _dates.append(_curr_date)
+        _curr_date = _curr_date + datetime.timedelta(days=1)
+
     return _dates
