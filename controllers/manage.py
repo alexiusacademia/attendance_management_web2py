@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from entries import *
 
 
 def index():
@@ -50,3 +51,8 @@ def view_section_log_data():
     employees_in_section = db(db.employees.section_id == section_id).select()
 
     return dict(section=section, employees=employees_in_section)
+
+def view_employee_log_data():
+    employee_id = request.args[0]
+    employee = db(db.employees.id == employee_id).select()
+    return locals()

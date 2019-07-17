@@ -1,2 +1,18 @@
 {{extend 'layout.html'}}
+
+<h1>
+    {{=section[0]['name']}}
+</h1>
+
+<hr/>
+<h5>
+    Select Employee To View Log
+</h5>
+<hr/>
+
+<div class="list-group">
+    {{for employee in employees:}}
+        {{employee_id = employee['employee_id']}}
+        <a href="{{=URL('manage/view_employee_log_data', str(employee_id))}}" class="list-group-item">{{=employee['name']}}</a> {{pass}}
+</div>
 {{=employees}}
