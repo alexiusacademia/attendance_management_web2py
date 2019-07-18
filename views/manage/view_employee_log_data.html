@@ -5,7 +5,6 @@
 </h2>
 
 <hr/>
-{{=_messages}}
 <table class="table center">
     <thead class="thead-dark">
         <tr>
@@ -23,12 +22,9 @@
     <tbody>
         {{for (_index, _date) in enumerate(_dates):}}
             <tr>
-                <td>{{=_date}}</td>
-                <td>{{=_am_time_ins[_index]}}</td>
-                <td>{{=_am_time_outs[_index]}}</td>
-                <td>{{=_pm_time_ins[_index]}}</td>
-                <td>{{=_pm_time_outs[_index]}}</td>
-                <td>{{=_lates[_index]}}</td>
+                <!-- Display all fields -->
+                {{for i in range(len(_complete_day_log[_index])):}}
+                    <td>{{=_complete_day_log[_index][i]}}</td>{{pass}}
                 {{pass}}
             </tr>
     </tbody>
