@@ -112,13 +112,18 @@ def view_employee_log_data():
     _am_time_outs = []
     _pm_time_ins = []
     _pm_time_outs = []
+    _lates = []
 
     for _date in _dates:
         _day_log_entries = get_log_entries_for_a_day(_date, _logs)
         _day_time_entries = get_time_entries_for_a_day(_date, _time_logs)
         in1 = get_time_in(_day_time_entries, _day_log_entries, am=True)
+
+        _late = 0
+
         if in1['time_in'] is not None:
             _am_time_ins.append(in1['time_in'])
+            _late += in1['late']
         else:
             _am_time_ins.append('')
 
@@ -131,6 +136,7 @@ def view_employee_log_data():
         in2 = get_time_in(_day_time_entries, _day_log_entries, am=False)
         if in2['time_in'] is not None:
             _pm_time_ins.append(in2['time_in'])
+            _late += in2['late']
         else:
             _pm_time_ins.append('')
 
@@ -140,6 +146,11 @@ def view_employee_log_data():
         else:
             _pm_time_outs.append('')
 
+        if _late == 0:
+            _lates.append('')
+        else:
+            _lates.append(_late)
+
     return dict(_dates=_dates,
                 time_logs=_time_logs,
                 logs=_logs,
@@ -147,4 +158,5 @@ def view_employee_log_data():
                 _am_time_ins=_am_time_ins,
                 _am_time_outs=_am_time_outs,
                 _pm_time_ins=_pm_time_ins,
-                _pm_time_outs=_pm_time_outs)
+                _pm_time_outs=_pm_time_outs,
+                _lates=_lates)
