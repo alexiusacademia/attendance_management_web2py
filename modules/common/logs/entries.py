@@ -1,6 +1,14 @@
 import datetime
 
 
+# ---------------
+# Time Constants
+AM_TIME_IN_THRESHOLD = datetime.time(8, 0, 0)
+AM_TIME_OUT_THRESHOLD = datetime.time(12, 0, 0)
+PM_TIME_IN_THRESHOLD = datetime.time(13, 0, 0)
+PM_TIME_OUT_THRESHOLD = datetime.time(17, 0, 0)
+
+
 def get_all_time_entries(start_date: datetime,
                          end_date: datetime,
                          time_lines,
@@ -123,7 +131,7 @@ def get_time_in(day_time_entries, day_log_entries, am=True):
 
         _log1 = day_log_entries[0]
         _t1 = day_time_entries[0].time()
-        _time_threshold = AM_TIME_IN_THRESHOLD
+        _time_threshold = datetime.time(8, 0, 0)
 
     if not am:
         if len(day_log_entries) < 3:
@@ -131,9 +139,9 @@ def get_time_in(day_time_entries, day_log_entries, am=True):
 
         _log1 = day_log_entries[2]
         _t1 = day_time_entries[2].time()
-        _time_threshold = PM_TIME_IN_THRESHOLD
+        _time_threshold = datetime.time(13, 0, 0)
 
-    if _log1 != CODE_LOG_IN:
+    if _log1 != '1010':
         return {'time_in': None, 'message': 'Wrong log code.'}
 
     _noon_time = datetime.time(12, 0, 0)
@@ -166,20 +174,25 @@ def get_time_out(day_time_entries, day_log_entries, am=True):
 
         _log1 = day_log_entries[1]
         _t1 = day_time_entries[1].time()
-        _time_threshold = AM_TIME_OUT_THRESHOLD
+        _time_threshold = datetime.time(12, 0, 0)
 
     if not am:
+        '''
         if len(day_log_entries) < 4:
+            return {'time_out': None, 'message': 'Not enough log.'} '''
+        if len(day_log_entries) == 0:
             return {'time_out': None, 'message': 'Not enough log.'}
+        if len(day_log_entries) == 2:
+            # Check if this is for logout in the afternoon
+            _t1_temp = day_time_entries[1].time()
+
 
         _log1 = day_log_entries[3]
         _t1 = day_time_entries[3].time()
-        _time_threshold = PM_TIME_OUT_THRESHOLD
+        _time_threshold = datetime.time(17, 0, 0)
 
-    if _log1 != CODE_LOG_OUT:
+    if _log1 != '1110':
         return {'time_out': None, 'message': 'Wrong log code.'}
-
-    _noon_time = datetime.time(12, 0, 0)
 
     obj['time_out'] = _t1
 

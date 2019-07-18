@@ -108,4 +108,43 @@ def view_employee_log_data():
     # Get list of date from the range
     _dates = get_dates(start_date, end_date)
 
-    return dict(_dates=_dates, time_logs=_time_logs, logs=_logs, name=employee[0]['name'])
+    _am_time_ins = []
+    _am_time_outs = []
+    _pm_time_ins = []
+    _pm_time_outs = []
+
+    for _date in _dates:
+        _day_log_entries = get_log_entries_for_a_day(_date, _logs)
+        _day_time_entries = get_time_entries_for_a_day(_date, _time_logs)
+        in1 = get_time_in(_day_time_entries, _day_log_entries, am=True)
+        if in1['time_in'] is not None:
+            _am_time_ins.append(in1['time_in'])
+        else:
+            _am_time_ins.append('')
+
+        out1 = get_time_out(_day_time_entries, _day_log_entries, am=True)
+        if out1['time_out'] is not None:
+            _am_time_outs.append(out1['time_out'])
+        else:
+            _am_time_outs.append('')
+
+        in2 = get_time_in(_day_time_entries, _day_log_entries, am=False)
+        if in2['time_in'] is not None:
+            _pm_time_ins.append(in2['time_in'])
+        else:
+            _pm_time_ins.append('')
+
+        out2 = get_time_out(_day_time_entries, _day_log_entries, am=False)
+        if out2['time_out'] is not None:
+            _pm_time_outs.append(out2['time_out'])
+        else:
+            _pm_time_outs.append('')
+
+    return dict(_dates=_dates,
+                time_logs=_time_logs,
+                logs=_logs,
+                name=employee[0]['name'],
+                _am_time_ins=_am_time_ins,
+                _am_time_outs=_am_time_outs,
+                _pm_time_ins=_pm_time_ins,
+                _pm_time_outs=_pm_time_outs)

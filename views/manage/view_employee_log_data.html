@@ -6,20 +6,28 @@
 
 <hr/>
 
-<table class="table">
+<table class="table center">
     <thead class="thead-dark">
         <tr>
             <th>Date</th>
-            <th>AM In</th>
-            <th>AM Out</th>
-            <th>PM In</th>
-            <th>OM Out</th>
+            <th>In<br/>(AM)</th>
+            <th>Out<br/>(AM)</th>
+            <th>In<br/>(PM)</th>
+            <th>Out<br/>(PM)</th>
+            <th>Late<br/>(Minutes)</th>
+            <th>Undertime<br/>(Minutes)</th>
+            <th>Absent<br/>(Days)</th>
+            <th>On-Field<br/>(Yes/No)</th>
         </tr>
     </thead>
     <tbody>
-        {{for _date in _dates:}}
+        {{for (_index, _date) in enumerate(_dates):}}
             <tr>
                 <td>{{=_date}}</td>
+                <td>{{=_am_time_ins[_index]}}</td>
+                <td>{{=_am_time_outs[_index]}}</td>
+                <td>{{=_pm_time_ins[_index]}}</td>
+                <td>{{=_pm_time_outs[_index]}}</td>
                 {{pass}}
             </tr>
     </tbody>
