@@ -4,10 +4,12 @@ import datetime
 from common.logs.entries import *
 
 
+@auth.requires_login()
 def index():
     return dict(message="hello from manage.py")
 
 
+@auth.requires_login()
 def attlogs():
     db.logs.uploaded.default = request.now
     logs = SQLFORM.grid(db.logs)
@@ -15,11 +17,13 @@ def attlogs():
     return locals()
 
 
+@auth.requires_login()
 def generate_entry():
     logs = db(db.logs).select(orderby=~db.logs.id)
     return dict(logs=logs)
 
 
+@auth.requires_login()
 def use_log_data():
     log_id = request.args[0]
     log = db(db.logs.id == log_id).select()
@@ -67,6 +71,7 @@ def use_log_data():
     return dict(sections=sections, start_date=start_date, end_date=end_date)
 
 
+@auth.requires_login()
 def set_session_start_date():
     # Set the start_date and save to session
     start_date = request.args[0]
@@ -76,6 +81,7 @@ def set_session_start_date():
     return start_date
 
 
+@auth.requires_login()
 def set_session_end_date():
     # Set the end_date and save to session
     end_date = request.args[0]
@@ -85,6 +91,7 @@ def set_session_end_date():
     return end_date
 
 
+@auth.requires_login()
 def view_section_log_data():
     section_id = request.args[0]
     section = db(db.sections.id == section_id).select()
@@ -94,6 +101,7 @@ def view_section_log_data():
     return dict(section=section, employees=employees_in_section)
 
 
+@auth.requires_login()
 def view_employee_log_data():
     employee_id = request.args[0]
     employee = db(db.employees.employee_id == int(employee_id)).select()
