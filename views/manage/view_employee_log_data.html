@@ -24,8 +24,20 @@
             <tr>
                 <!-- Display all fields -->
                 {{for i in range(len(_complete_day_log[_index])):}}
-                        <td>{{='' if i==5 and _complete_day_log[_index][7]==1 else _complete_day_log[_index][i]}}</td>{{pass}}
+                        <td id="{{='_field_' + str(_index) + '_' + str(i)}}">{{='' if i==5 and _complete_day_log[_index][7]==1 else _complete_day_log[_index][i]}}</td>{{pass}}
                 {{pass}}
             </tr>
     </tbody>
 </table>
+
+<script>
+$('._field_check_box').on('click', (evt) => {
+    _id = evt.target.id
+    _id_elements = _id.split('_')
+    _num_elements = _id_elements.length
+    _row_number = _id_elements[_num_elements - 1]
+
+    _check_state = evt.target.checked
+
+})
+</script>
