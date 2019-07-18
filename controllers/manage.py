@@ -113,6 +113,7 @@ def view_employee_log_data():
     _pm_time_ins = []
     _pm_time_outs = []
     _lates = []
+    _undertimes = []
     _messages = []
 
     for _date in _dates:
@@ -121,6 +122,7 @@ def view_employee_log_data():
         in1 = get_time_in(_day_time_entries, _day_log_entries, am=True)
 
         _late = 0
+        _undertime = 0
 
         if in1['time_in'] is not None:
             _am_time_ins.append(in1['time_in'])
@@ -131,6 +133,7 @@ def view_employee_log_data():
         out1 = get_time_out(_day_time_entries, _day_log_entries, am=True)
         if out1['time_out'] is not None:
             _am_time_outs.append(out1['time_out'])
+            _undertime += out1['under_time']
         else:
             _am_time_outs.append('')
 
@@ -144,16 +147,54 @@ def view_employee_log_data():
         out2 = get_time_out(_day_time_entries, _day_log_entries, am=False)
         if out2['time_out'] is not None:
             _pm_time_outs.append(out2['time_out'])
+            _undertime += out2['under_time']
         else:
             _pm_time_outs.append('')
-            _messages.append(out2['message'])
 
         if _late == 0:
             _lates.append('')
         else:
             _lates.append(_late)
+        if _undertime == 0:
+            _undertimes.append('')
+        else:
+            _undertimes.append(_undertime)
 
-    return dict(_dates=_dates,
+    _complete_day_log = []
+    for _index in range(len(_dates)):
+
+        _absent = 0
+
+        if _dates[_index].weekday() < 5:
+            # Weekday
+            _log_count = 0
+            if _am_time_ins[_index] != '':
+                _log_count += 1
+            if _am_time_outs[_index] != '':
+                _log_count += 1
+            if _pm_time_ins[_index] != '':
+                _log_count += 1
+            if _pm_time_outs[_index] != '':
+                _log_count += 1
+
+            if _log_count <= 2:
+                _absent = 1
+
+        if _absent == 0:
+            _absent = ''
+
+        _complete_day_log.append([_dates[_index],
+                                  _am_time_ins[_index],
+                                  _am_time_outs[_index],
+                                  _pm_time_ins[_index],
+                                  _pm_time_outs[_index],
+                                  _lates[_index],
+                                  _undertimes[_index],
+                                  _absent,
+                                  INPUT(_type='checkbox', _class='_field_check_box', _id=str('_field_check_' + str(_index)))])
+
+    return dict(_complete_day_log=_complete_day_log,
+                _dates=_dates,
                 time_logs=_time_logs,
                 logs=_logs,
                 name=employee[0]['name'],
@@ -162,4 +203,5 @@ def view_employee_log_data():
                 _pm_time_ins=_pm_time_ins,
                 _pm_time_outs=_pm_time_outs,
                 _lates=_lates,
+                _undertimes=_undertimes,
                 _messages=_messages)

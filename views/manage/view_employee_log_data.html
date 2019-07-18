@@ -24,7 +24,7 @@
             <tr>
                 <!-- Display all fields -->
                 {{for i in range(len(_complete_day_log[_index])):}}
-                    <td>{{=_complete_day_log[_index][i]}}</td>{{pass}}
+                        <td>{{='' if i==5 and _complete_day_log[_index][7]==1 else _complete_day_log[_index][i]}}</td>{{pass}}
                 {{pass}}
             </tr>
     </tbody>
