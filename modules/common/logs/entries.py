@@ -169,27 +169,36 @@ def get_time_out(day_time_entries, day_log_entries, am=True):
     _time_threshold = None
 
     if am:
+        _time_threshold = datetime.time(12, 0, 0)
         if len(day_log_entries) < 2:
             return {'time_out': None, 'message': 'Not enough log.'}
 
         _log1 = day_log_entries[1]
         _t1 = day_time_entries[1].time()
-        _time_threshold = datetime.time(12, 0, 0)
+
+        if _t1 <= datetime.time(13, 0, 0):
+            _t1 = _t1
+        else:
+            return {'time_out': None, 'message': 'Time out is for afternoon.'}
 
     if not am:
-        '''
-        if len(day_log_entries) < 4:
-            return {'time_out': None, 'message': 'Not enough log.'} '''
-        if len(day_log_entries) == 0:
-            return {'time_out': None, 'message': 'Not enough log.'}
-        if len(day_log_entries) == 2:
-            # Check if this is for logout in the afternoon
-            _t1_temp = day_time_entries[1].time()
-
-
-        _log1 = day_log_entries[3]
-        _t1 = day_time_entries[3].time()
         _time_threshold = datetime.time(17, 0, 0)
+
+        if len(day_log_entries) == 2:
+            _t1_temp = day_time_entries[1].time()
+            if _t1_temp > datetime.time(13, 0, 0):
+                _t1 = _t1_temp
+                _log1 = day_log_entries[1]
+        elif len(day_log_entries) == 3:
+            _t1_temp = day_time_entries[2].time()
+            if _t1_temp > datetime.time(13, 0, 0):
+                _t1 = _t1_temp
+                _log1 = day_log_entries[2]
+        elif len(day_log_entries) == 4:
+            _t1_temp = day_time_entries[3].time()
+            if _t1_temp > datetime.time(13, 0, 0):
+                _t1 = _t1_temp
+                _log1 = day_log_entries[3]
 
     if _log1 != '1110':
         return {'time_out': None, 'message': 'Wrong log code.'}

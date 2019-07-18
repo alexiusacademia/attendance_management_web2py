@@ -113,6 +113,7 @@ def view_employee_log_data():
     _pm_time_ins = []
     _pm_time_outs = []
     _lates = []
+    _messages = []
 
     for _date in _dates:
         _day_log_entries = get_log_entries_for_a_day(_date, _logs)
@@ -145,6 +146,7 @@ def view_employee_log_data():
             _pm_time_outs.append(out2['time_out'])
         else:
             _pm_time_outs.append('')
+            _messages.append(out2['message'])
 
         if _late == 0:
             _lates.append('')
@@ -159,4 +161,5 @@ def view_employee_log_data():
                 _am_time_outs=_am_time_outs,
                 _pm_time_ins=_pm_time_ins,
                 _pm_time_outs=_pm_time_outs,
-                _lates=_lates)
+                _lates=_lates,
+                _messages=_messages)
